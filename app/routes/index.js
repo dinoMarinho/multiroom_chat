@@ -1,5 +1,6 @@
+/* Criando a rota do index */
 module.exports = function(application){
     application.get('/',function(req,res){
-        res.send('teste');
+        res.render('index');
     });
 }
