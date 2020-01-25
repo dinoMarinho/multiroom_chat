@@ -10,6 +10,10 @@ var server = app.listen(5500,function(){
 /* Integrando o WebSockets na aplicacao  */
 var io = require('socket.io').listen(server);
 
+
+/* Criando uma variavel global */
+app.set('io',io);
+
 /* Criar a conexão por WebSocket */
 io.on('connect',function(socket){
     console.log('Usuário Conectou');
@@ -18,6 +22,6 @@ io.on('connect',function(socket){
         console.log('Usuário desconectou');
     });
 
-    
+
 
 });
