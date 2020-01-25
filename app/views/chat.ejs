@@ -71,7 +71,7 @@
 		<div class="container">
             <div class="row conversa" id="conversa">
 				<div class="col-md-1"></div>
-				<div class="col-md-10" id="dialogos">
+				<div class="col-md-10" id="dialogos"></div>
 					
 				<div class="col-md-1"></div>
                 
@@ -79,22 +79,7 @@
 			
 			<div class="row participantes" id="participantes" style="display:none">
 				<div class="col-md-1"></div>
-				<div class="col-md-10">
-					<span class="participante">
-						<img src="images/ico_usuario.png" />
-						Jorge
-					</span>
-					
-					<span class="participante">
-						<img src="images/ico_usuario.png" />
-						José
-					</span>
-					
-					<span class="participante">
-						<img src="images/ico_usuario.png" />
-						Fernando
-					</span>
-				</div>
+				<div class="col-md-10" id="pessoas"></div>
 				<div class="col-md-1"></div>
                 
             </div>
@@ -102,17 +87,17 @@
 		
 		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 			<div class="container">
-				<div class="panel-body campo-mensagem">
-					<form>
+				<div class="panel-body campo-mensagem" >
 						<div class="col-md-12">
 							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Mensagem">
+								<input type="text" class="form-control" placeholder="Mensagem" id="mensagem">
+								<input type="hidden" value="<%=dadosForm.apelido%>" id="apelido">
+								<input type="hidden" value="0" id="apelido_atualizado_nos_clientes">
 								<span class="input-group-btn">
-									<button class="btn btn-default" type="button">></button>
+									<button class="btn btn-default" type="button" id="enviar_mensagem">></button>
 								</span>
 							</div>
 						</div>
-					</form>
 				</div>
 			</div>
 		</nav>		
@@ -125,7 +110,7 @@
 			var socket = io('http://localhost:5500');
 
 
-			/* Recebendo a emissão do login */
+			/* Recebendo a emissão do login de um novo usuário */
 			socket.on('msgParaCliente',function(data){
 				// Enviando a mensagem e qual usuário se conectou
 				var html = '';
@@ -135,7 +120,48 @@
 				html += '</div>';
 
 				$('#dialogos').append(html);
+				// Scrolla para a mensagem final
+				window.scrollTo(0,document.body.scrollHeight);
 			});
+
+			/* Recebendo a emissão dos participantes da conversa */
+			socket.on('participantesParaCliente',function(data){
+				console.log(data.apelido);
+				var html = '';
+				html += '<span class="participante">';
+					html += '<img src="images/ico_usuario.png">';
+					html += data.apelido;
+				html += '</span>';
+
+				$('#pessoas').append(html);
+			});
+
+
+			/* Enviando a mensagem para o servidor */
+			$('#enviar_mensagem').click(function(){
+				enviaMsg();
+			});
+			$("input").keypress(function(event) {
+				if (event.which == 13) {
+					enviaMsg();
+				}       
+			});
+
+
+			/* Função que envia a mensagem para o servidor */
+			var enviaMsg = function(){
+				socket.emit(
+					'msgParaServidor',
+					{ 
+						apelido: $('#apelido').val(), 
+						mensagem : $('#mensagem').val(),
+						apelido_atualizado_nos_clientes : $('#apelido_atualizado_nos_clientes').val()
+					}
+				);
+				$('#mensagem').val('').focus();
+				$('#apelido_atualizado_nos_clientes').val('1');
+			}
+			
 		</script>
 
 	</body>

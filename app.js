@@ -16,12 +16,38 @@ app.set('io',io);
 
 /* Criar a conexão por WebSocket */
 io.on('connect',function(socket){
-    console.log('Usuário Conectou');
+    var ip = socket.conn.remoteAddress;
+    console.log('Uma nova conexão foi adquirida pelo IP: '+ip);
 
     socket.on('disconnect',function(){
-        console.log('Usuário desconectou');
+        console.log('A conexão do IP: '+ip + ' foi desconectada');
     });
 
+    socket.on('msgParaServidor',function(data){
 
+        /* Dialogo */
+        socket.emit(
+            'msgParaCliente',
+            { apelido: data.apelido, mensagem: data.mensagem }
+        );
+        socket.broadcast.emit(
+            'msgParaCliente',
+            { apelido: data.apelido, mensagem: data.mensagem }
+        );
+
+
+        /* Participantes */
+        if(parseInt(data.apelido_atualizado_nos_clientes) == 0){
+            socket.emit(
+                'participantesParaCliente',
+                { apelido: data.apelido }
+            );
+            socket.broadcast.emit(
+                'participantesParaCliente',
+                { apelido: data.apelido }
+            );
+        }
+
+    });
 
 });
