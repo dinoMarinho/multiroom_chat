@@ -1,0 +1,26 @@
+{
+  "name": "multiroom_chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dinoMarinho/multiroom_chat.git"
+  },
+  "author": "Vinicius Marinho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dinoMarinho/multiroom_chat/issues"
+  },
+  "homepage": "https://github.com/dinoMarinho/multiroom_chat#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "consign": "^0.1.6",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-validator": "^3.2.0"
+  }
+}
